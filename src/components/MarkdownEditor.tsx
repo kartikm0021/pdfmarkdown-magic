@@ -526,78 +526,133 @@ For further assistance, please contact customer support at support@insurance.com
           <div className="flex-1 overflow-auto">
             <div className="p-4 space-y-6">
               {/* Current Document Summary section */}
-              <div className="space-y-2">
+              <div className="space-y-3">
                 <h3 className="text-lg font-medium">Current Document Summary</h3>
-                <div className="p-4 border rounded-lg bg-muted/20">
-                  {documentSummary ? (
+                {documentSummary ? (
+                  <div className="p-4 border rounded-lg bg-background">
                     <p className="text-sm">{documentSummary}</p>
-                  ) : (
-                    <p className="text-sm text-muted-foreground italic">No summary has been set for this document.</p>
-                  )}
-                </div>
+                  </div>
+                ) : (
+                  <div className="p-4 border rounded-lg bg-muted/20">
+                    <p className="text-sm text-muted-foreground italic">No summary has been set for this document yet.</p>
+                    <div className="mt-4">
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        className="gap-1.5"
+                        onClick={handleGenerateSummary}
+                        disabled={isGeneratingSummary}
+                      >
+                        <Sparkles className={cn("h-4 w-4", isGeneratingSummary && "animate-pulse")} />
+                        <span>Generate AI Summary</span>
+                      </Button>
+                    </div>
+                  </div>
+                )}
               </div>
               
-              <Separator />
+              {/* AI Summary section - only show if actively generating or already generated */}
+              {(isGeneratingSummary || aiSummary) && (
+                <>
+                  <Separator />
+                  
+                  <Collapsible 
+                    defaultOpen={true} 
+                    className="space-y-3 border rounded-lg p-4"
+                  >
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-lg font-medium">AI-Generated Summary</h3>
+                      <div className="flex items-center gap-2">
+                        {aiSummary && (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="gap-1.5"
+                            onClick={toggleSummaryPreview}
+                          >
+                            {showSummaryPreview ? (
+                              <>
+                                <EyeOff className="h-4 w-4" />
+                                <span>Edit</span>
+                              </>
+                            ) : (
+                              <>
+                                <Eye className="h-4 w-4" />
+                                <span>Preview</span>
+                              </>
+                            )}
+                          </Button>
+                        )}
+                        <CollapsibleTrigger asChild>
+                          <Button variant="ghost" size="sm">
+                            {aiSummary ? "Hide" : "Generating..."}
+                          </Button>
+                        </CollapsibleTrigger>
+                      </div>
+                    </div>
+                    
+                    <CollapsibleContent className="mt-2">
+                      {isGeneratingSummary ? (
+                        <div className="flex items-center justify-center p-8">
+                          <div className="flex flex-col items-center gap-2">
+                            <Sparkles className="h-8 w-8 animate-pulse text-primary" />
+                            <p className="text-sm text-muted-foreground">Generating summary...</p>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="relative">
+                          {showSummaryPreview ? (
+                            <div className="p-4 border rounded-lg prose dark:prose-invert prose-sm max-w-none">
+                              <p>{aiSummary}</p>
+                            </div>
+                          ) : (
+                            <Textarea
+                              value={aiSummary}
+                              onChange={(e) => setAiSummary(e.target.value)}
+                              className="min-h-[160px] resize-vertical"
+                              placeholder="AI-generated summary will appear here. You can edit it before applying."
+                            />
+                          )}
+                        </div>
+                      )}
+                      
+                      {aiSummary && !isGeneratingSummary && (
+                        <div className="mt-4 flex justify-end">
+                          <Button 
+                            onClick={applySummary}
+                            size="sm"
+                            className="gap-1.5"
+                          >
+                            <Save className="h-4 w-4" />
+                            Apply This Summary
+                          </Button>
+                        </div>
+                      )}
+                    </CollapsibleContent>
+                  </Collapsible>
+                </>
+              )}
               
-              {/* AI-Generated Summary section */}
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-medium">AI-Generated Summary</h3>
+              {/* Show the button to generate summary if there is already a summary but no AI version in progress */}
+              {documentSummary && !aiSummary && !isGeneratingSummary && (
+                <div className="flex justify-end">
                   <Button
-                    variant="outline"
+                    variant="secondary"
                     size="sm"
                     className="gap-1.5"
-                    onClick={toggleSummaryPreview}
+                    onClick={handleGenerateSummary}
+                    disabled={isGeneratingSummary}
                   >
-                    {showSummaryPreview ? (
-                      <>
-                        <EyeOff className="h-4 w-4" />
-                        <span>Edit</span>
-                      </>
-                    ) : (
-                      <>
-                        <Eye className="h-4 w-4" />
-                        <span>Preview</span>
-                      </>
-                    )}
+                    <Sparkles className={cn("h-4 w-4", isGeneratingSummary && "animate-pulse")} />
+                    <span>Generate New AI Summary</span>
                   </Button>
                 </div>
-                
-                <div className="relative">
-                  {showSummaryPreview ? (
-                    <div className="p-4 border rounded-lg prose dark:prose-invert prose-sm max-w-none">
-                      <p>{aiSummary}</p>
-                    </div>
-                  ) : (
-                    <Textarea
-                      value={aiSummary}
-                      onChange={(e) => setAiSummary(e.target.value)}
-                      className="min-h-[160px] resize-vertical"
-                      placeholder="AI-generated summary will appear here. You can edit it before applying."
-                    />
-                  )}
-                </div>
-                
-                <div className="text-sm text-muted-foreground">
-                  <p>You can edit the AI-generated summary before applying it to your document.</p>
-                </div>
-              </div>
+              )}
             </div>
-          </div>
-          
-          <div className="border-t p-4 bg-muted/30 flex justify-end">
-            <Button 
-              onClick={applySummary}
-              size="sm"
-              className="gap-1.5"
-              disabled={!aiSummary}
-            >
-              <Save className="h-4 w-4" />
-              Apply Summary
-            </Button>
           </div>
         </TabsContent>
       </Tabs>
     </div>
   );
 }
+
