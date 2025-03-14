@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { RefreshCw, Save, Sparkles, Eye, EyeOff, MessageCircleQuestion, ListChecks } from 'lucide-react';
 import { Button } from './ui/button';
@@ -363,7 +362,7 @@ For further assistance, please contact customer support at support@insurance.com
         <TabsContent value="improved" className="flex-1 p-0 m-0 flex flex-col">
           <div className="flex-1 overflow-auto">
             {showAiPreview ? (
-              <div className="prose dark:prose-invert max-w-none p-4 h-full border-0">
+              <div className="prose dark:prose-invert max-w-none p-4 h-full overflow-y-auto">
                 {/* This would be rendered markdown in a real implementation */}
                 <h1>Health Insurance Coverage Document</h1>
                 <h2>Overview</h2>
@@ -379,10 +378,10 @@ For further assistance, please contact customer support at support@insurance.com
                 <p>For further assistance, please contact customer support at support@insurance.com or call 1-800-555-1234.</p>
               </div>
             ) : (
-              <div className="w-full h-full flex">
+              <div className="w-full h-full flex flex-col">
                 <Textarea
                   value={improvedContent}
-                  className="markdown-editor rounded-none border-0 w-full h-full resize-none"
+                  className="flex-1 rounded-none border-0 w-full h-full min-h-[300px] resize-none"
                   readOnly
                 />
               </div>
@@ -418,7 +417,6 @@ For further assistance, please contact customer support at support@insurance.com
           </div>
         </TabsContent>
 
-        {/* Improved Q&A section with better spacing and layout */}
         <TabsContent value="qa" className="flex-1 p-0 m-0 flex flex-col">
           <div className="flex-1 overflow-auto">
             <div className="p-4 bg-background">
@@ -524,7 +522,6 @@ For further assistance, please contact customer support at support@insurance.com
           </div>
         </TabsContent>
 
-        {/* Improved Summary section with better spacing and layout */}
         <TabsContent value="summary" className="flex-1 p-0 m-0 flex flex-col">
           <div className="flex-1 overflow-auto">
             <div className="p-4 space-y-6">
