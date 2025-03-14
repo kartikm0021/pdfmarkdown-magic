@@ -30,10 +30,10 @@ This is the extracted markdown content from the PDF document. You can edit it he
   const [isImproving, setIsImproving] = useState(false);
   const [showAiPreview, setShowAiPreview] = useState(false);
   const [isGeneratingQA, setIsGeneratingQA] = useState(false);
-  const [isGeneratingSummary, setIsGeneratingSummary] = useState(false);
   const [qaItems, setQAItems] = useState<{question: string, answer: string, accepted: boolean}[]>([]);
   const [documentSummary, setDocumentSummary] = useState("");
   const [aiSummary, setAiSummary] = useState("");
+  const [isGeneratingSummary, setIsGeneratingSummary] = useState(false);
   const [showSummaryPreview, setShowSummaryPreview] = useState(false);
 
   const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -113,6 +113,12 @@ For further assistance, please contact customer support at support@insurance.com
   };
 
   const handleGenerateQA = () => {
+    if (qaItems.length > 0) {
+      // If we already have QA items, just switch to the QA tab
+      setActiveTab("qa");
+      return;
+    }
+
     setIsGeneratingQA(true);
     
     // Simulate AI Q&A generation API call
@@ -152,6 +158,12 @@ For further assistance, please contact customer support at support@insurance.com
   };
 
   const handleGenerateSummary = () => {
+    if (aiSummary) {
+      // If we already have a summary, just switch to the summary tab
+      setActiveTab("summary");
+      return;
+    }
+
     setIsGeneratingSummary(true);
     
     // Simulate AI summary generation API call
@@ -265,7 +277,7 @@ For further assistance, please contact customer support at support@insurance.com
             disabled={isGeneratingQA}
           >
             <MessageCircleQuestion className={cn("h-4 w-4", isGeneratingQA && "animate-pulse")} />
-            <span>Generate Q&A</span>
+            <span>{qaItems.length ? "View Q&A" : "Generate Q&A"}</span>
           </Button>
           <Button 
             variant="secondary"
@@ -275,7 +287,7 @@ For further assistance, please contact customer support at support@insurance.com
             disabled={isGeneratingSummary}
           >
             <ListChecks className={cn("h-4 w-4", isGeneratingSummary && "animate-pulse")} />
-            <span>Generate Summary</span>
+            <span>{aiSummary || documentSummary ? "View Summary" : "Generate Summary"}</span>
           </Button>
           <Button 
             size="sm" 
@@ -526,7 +538,7 @@ For further assistance, please contact customer support at support@insurance.com
           <div className="flex-1 overflow-auto">
             <div className="p-4 space-y-4">
               <div>
-                <h3 className="text-lg font-medium mb-2">Current Document Summary</h3>
+                <h3 className="text-lg font-medium mb-2">Document Summary</h3>
                 {documentSummary ? (
                   <div className="p-4 border rounded-lg bg-background">
                     <p className="text-sm">{documentSummary}</p>
@@ -534,32 +546,16 @@ For further assistance, please contact customer support at support@insurance.com
                 ) : (
                   <div className="p-4 border rounded-lg bg-muted/20">
                     <p className="text-sm text-muted-foreground italic">No summary has been set for this document yet.</p>
-                    <div className="mt-4">
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        className="gap-1.5"
-                        onClick={handleGenerateSummary}
-                        disabled={isGeneratingSummary}
-                      >
-                        <Sparkles className={cn("h-4 w-4", isGeneratingSummary && "animate-pulse")} />
-                        <span>Generate AI Summary</span>
-                      </Button>
-                    </div>
                   </div>
                 )}
               </div>
-              
+
               {(isGeneratingSummary || aiSummary) && (
-                <div className="mt-6">
-                  <Separator className="mb-6" />
-                  
-                  <Collapsible 
-                    defaultOpen={true} 
-                    className="border rounded-lg p-4"
-                  >
+                <div>
+                  <Separator className="my-4" />
+                  <Collapsible defaultOpen={true} className="border rounded-lg p-4">
                     <div className="flex items-center justify-between">
-                      <h3 className="text-lg font-medium">AI-Generated Summary</h3>
+                      <h3 className="text-lg font-medium">AI Suggestion</h3>
                       <div className="flex items-center gap-2">
                         {aiSummary && (
                           <Button
@@ -581,24 +577,19 @@ For further assistance, please contact customer support at support@insurance.com
                             )}
                           </Button>
                         )}
-                        <CollapsibleTrigger asChild>
-                          <Button variant="ghost" size="sm">
-                            {aiSummary ? "Hide" : "Generating..."}
-                          </Button>
-                        </CollapsibleTrigger>
                       </div>
                     </div>
                     
                     <CollapsibleContent className="mt-3">
                       {isGeneratingSummary ? (
-                        <div className="flex items-center justify-center p-6">
+                        <div className="flex items-center justify-center p-4">
                           <div className="flex flex-col items-center gap-2">
                             <Sparkles className="h-8 w-8 animate-pulse text-primary" />
                             <p className="text-sm text-muted-foreground">Generating summary...</p>
                           </div>
                         </div>
                       ) : (
-                        <div className="relative">
+                        <div className="relative mt-3">
                           {showSummaryPreview ? (
                             <div className="p-4 border rounded-lg prose dark:prose-invert prose-sm max-w-none">
                               <p>{aiSummary}</p>
@@ -607,42 +598,27 @@ For further assistance, please contact customer support at support@insurance.com
                             <Textarea
                               value={aiSummary}
                               onChange={(e) => setAiSummary(e.target.value)}
-                              className="min-h-[160px] resize-vertical"
+                              className="min-h-[120px] resize-vertical"
                               placeholder="AI-generated summary will appear here. You can edit it before applying."
                             />
                           )}
-                        </div>
-                      )}
-                      
-                      {aiSummary && !isGeneratingSummary && (
-                        <div className="mt-4 flex justify-end">
-                          <Button 
-                            onClick={applySummary}
-                            size="sm"
-                            className="gap-1.5"
-                          >
-                            <Save className="h-4 w-4" />
-                            Apply This Summary
-                          </Button>
+                          
+                          {aiSummary && !isGeneratingSummary && (
+                            <div className="mt-4 flex justify-end">
+                              <Button 
+                                onClick={applySummary}
+                                size="sm"
+                                className="gap-1.5"
+                              >
+                                <Save className="h-4 w-4" />
+                                Apply This Summary
+                              </Button>
+                            </div>
+                          )}
                         </div>
                       )}
                     </CollapsibleContent>
                   </Collapsible>
-                </div>
-              )}
-              
-              {documentSummary && !aiSummary && !isGeneratingSummary && (
-                <div className="mt-4 flex justify-end">
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    className="gap-1.5"
-                    onClick={handleGenerateSummary}
-                    disabled={isGeneratingSummary}
-                  >
-                    <Sparkles className={cn("h-4 w-4", isGeneratingSummary && "animate-pulse")} />
-                    <span>Generate New AI Summary</span>
-                  </Button>
                 </div>
               )}
             </div>
