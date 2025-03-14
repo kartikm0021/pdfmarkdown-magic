@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import { RefreshCw, Save } from 'lucide-react';
+import { RefreshCw, Save, Sparkles } from 'lucide-react';
 import { Button } from './ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { cn } from '@/lib/utils';
@@ -24,6 +24,7 @@ This is the extracted markdown content from the PDF document. You can edit it he
   const [activeTab, setActiveTab] = useState("markdown");
   const [isSaving, setIsSaving] = useState(false);
   const [isRegenerating, setIsRegenerating] = useState(false);
+  const [isImproving, setIsImproving] = useState(false);
 
   const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setMarkdownContent(e.target.value);
@@ -57,6 +58,36 @@ This is the extracted markdown content from the PDF document. You can edit it he
     }, 1000);
   };
 
+  const handleImproveReadability = () => {
+    setIsImproving(true);
+    
+    // Simulate AI improvement API call
+    setTimeout(() => {
+      // This would be replaced with an actual AI API call
+      const improvedContent = `# Health Insurance Coverage Document
+
+## Overview
+This document outlines the comprehensive coverage details for your health insurance plan. 
+Please review all sections carefully to understand your benefits.
+
+## Key Benefits
+- **Coverage Details**: Full hospital and outpatient services
+- **Premium Information**: Monthly premium of $250 with family discounts
+- **Eligibility**: Available for all employees and dependents
+- **Claims Process**: Simple online submission with 7-day processing
+
+## Additional Information
+For further assistance, please contact customer support at support@insurance.com or call 1-800-555-1234.`;
+      
+      setMarkdownContent(improvedContent);
+      setIsImproving(false);
+      toast({
+        title: "Content improved",
+        description: "AI has enhanced the markdown structure and readability.",
+      });
+    }, 1500);
+  };
+
   const hasUnsavedChanges = markdownContent !== originalContent;
 
   return (
@@ -73,6 +104,16 @@ This is the extracted markdown content from the PDF document. You can edit it he
           >
             <RefreshCw className={cn("h-4 w-4", isRegenerating && "animate-spin")} />
             <span>Regenerate</span>
+          </Button>
+          <Button 
+            variant="secondary"
+            size="sm" 
+            className="gap-1.5"
+            onClick={handleImproveReadability}
+            disabled={isImproving}
+          >
+            <Sparkles className={cn("h-4 w-4", isImproving && "animate-pulse")} />
+            <span>Improve Readability</span>
           </Button>
           <Button 
             size="sm" 
