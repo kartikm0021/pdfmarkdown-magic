@@ -524,10 +524,9 @@ For further assistance, please contact customer support at support@insurance.com
 
         <TabsContent value="summary" className="flex-1 p-0 m-0 flex flex-col">
           <div className="flex-1 overflow-auto">
-            <div className="p-4 space-y-6">
-              {/* Current Document Summary section */}
-              <div className="space-y-3">
-                <h3 className="text-lg font-medium">Current Document Summary</h3>
+            <div className="p-4 space-y-4">
+              <div>
+                <h3 className="text-lg font-medium mb-3">Current Document Summary</h3>
                 {documentSummary ? (
                   <div className="p-4 border rounded-lg bg-background">
                     <p className="text-sm">{documentSummary}</p>
@@ -551,14 +550,13 @@ For further assistance, please contact customer support at support@insurance.com
                 )}
               </div>
               
-              {/* AI Summary section - only show if actively generating or already generated */}
               {(isGeneratingSummary || aiSummary) && (
                 <>
-                  <Separator />
+                  <Separator className="my-4" />
                   
                   <Collapsible 
                     defaultOpen={true} 
-                    className="space-y-3 border rounded-lg p-4"
+                    className="border rounded-lg p-4"
                   >
                     <div className="flex items-center justify-between">
                       <h3 className="text-lg font-medium">AI-Generated Summary</h3>
@@ -633,7 +631,6 @@ For further assistance, please contact customer support at support@insurance.com
                 </>
               )}
               
-              {/* Show the button to generate summary if there is already a summary but no AI version in progress */}
               {documentSummary && !aiSummary && !isGeneratingSummary && (
                 <div className="flex justify-end">
                   <Button
@@ -655,4 +652,3 @@ For further assistance, please contact customer support at support@insurance.com
     </div>
   );
 }
-
