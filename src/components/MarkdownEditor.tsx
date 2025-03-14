@@ -526,7 +526,7 @@ For further assistance, please contact customer support at support@insurance.com
           <div className="flex-1 overflow-auto">
             <div className="p-4 space-y-4">
               <div>
-                <h3 className="text-lg font-medium mb-3">Current Document Summary</h3>
+                <h3 className="text-lg font-medium mb-2">Current Document Summary</h3>
                 {documentSummary ? (
                   <div className="p-4 border rounded-lg bg-background">
                     <p className="text-sm">{documentSummary}</p>
@@ -551,8 +551,8 @@ For further assistance, please contact customer support at support@insurance.com
               </div>
               
               {(isGeneratingSummary || aiSummary) && (
-                <>
-                  <Separator className="my-4" />
+                <div className="mt-6">
+                  <Separator className="mb-6" />
                   
                   <Collapsible 
                     defaultOpen={true} 
@@ -589,9 +589,9 @@ For further assistance, please contact customer support at support@insurance.com
                       </div>
                     </div>
                     
-                    <CollapsibleContent className="mt-2">
+                    <CollapsibleContent className="mt-3">
                       {isGeneratingSummary ? (
-                        <div className="flex items-center justify-center p-8">
+                        <div className="flex items-center justify-center p-6">
                           <div className="flex flex-col items-center gap-2">
                             <Sparkles className="h-8 w-8 animate-pulse text-primary" />
                             <p className="text-sm text-muted-foreground">Generating summary...</p>
@@ -628,11 +628,11 @@ For further assistance, please contact customer support at support@insurance.com
                       )}
                     </CollapsibleContent>
                   </Collapsible>
-                </>
+                </div>
               )}
               
               {documentSummary && !aiSummary && !isGeneratingSummary && (
-                <div className="flex justify-end">
+                <div className="mt-4 flex justify-end">
                   <Button
                     variant="secondary"
                     size="sm"
