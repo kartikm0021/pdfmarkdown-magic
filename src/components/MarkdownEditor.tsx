@@ -21,6 +21,7 @@ This is the extracted markdown content from the PDF document. You can edit it he
 `);
   
   const [originalContent, setOriginalContent] = useState(markdownContent);
+  const [improvedContent, setImprovedContent] = useState("");
   const [activeTab, setActiveTab] = useState("markdown");
   const [isSaving, setIsSaving] = useState(false);
   const [isRegenerating, setIsRegenerating] = useState(false);
@@ -64,7 +65,7 @@ This is the extracted markdown content from the PDF document. You can edit it he
     // Simulate AI improvement API call
     setTimeout(() => {
       // This would be replaced with an actual AI API call
-      const improvedContent = `# Health Insurance Coverage Document
+      const aiImprovedContent = `# Health Insurance Coverage Document
 
 ## Overview
 This document outlines the comprehensive coverage details for your health insurance plan. 
@@ -79,13 +80,23 @@ Please review all sections carefully to understand your benefits.
 ## Additional Information
 For further assistance, please contact customer support at support@insurance.com or call 1-800-555-1234.`;
       
-      setMarkdownContent(improvedContent);
+      setImprovedContent(aiImprovedContent);
       setIsImproving(false);
+      setActiveTab("improved");
       toast({
-        title: "Content improved",
-        description: "AI has enhanced the markdown structure and readability.",
+        title: "AI suggestions ready",
+        description: "View the improved version in the 'AI Suggestions' tab.",
       });
     }, 1500);
+  };
+
+  const applyImprovedVersion = () => {
+    setMarkdownContent(improvedContent);
+    setActiveTab("markdown");
+    toast({
+      title: "Improvements applied",
+      description: "The AI suggestions have been applied to your document.",
+    });
   };
 
   const hasUnsavedChanges = markdownContent !== originalContent;
@@ -146,6 +157,14 @@ For further assistance, please contact customer support at support@insurance.com
             >
               Preview
             </TabsTrigger>
+            {improvedContent && (
+              <TabsTrigger 
+                value="improved" 
+                className="rounded-none px-4 py-2 data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-primary"
+              >
+                AI Suggestions
+              </TabsTrigger>
+            )}
           </TabsList>
         </div>
         
@@ -170,6 +189,26 @@ For further assistance, please contact customer support at support@insurance.com
               <li>Eligibility criteria</li>
               <li>Claim procedures</li>
             </ul>
+          </div>
+        </TabsContent>
+
+        <TabsContent value="improved" className="flex-1 p-0 m-0 flex flex-col">
+          <div className="flex-1 overflow-auto">
+            <Textarea
+              value={improvedContent}
+              className="markdown-editor rounded-none border-0"
+              readOnly
+            />
+          </div>
+          <div className="border-t p-3 bg-muted/30 flex justify-end">
+            <Button 
+              onClick={applyImprovedVersion}
+              size="sm"
+              className="gap-1.5"
+            >
+              <Sparkles className="h-4 w-4" />
+              Apply Suggestions
+            </Button>
           </div>
         </TabsContent>
       </Tabs>
