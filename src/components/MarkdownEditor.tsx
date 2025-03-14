@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { RefreshCw, Save, Sparkles, Eye, EyeOff, MessageCircleQuestion, ListChecks } from 'lucide-react';
 import { Button } from './ui/button';
@@ -8,6 +9,7 @@ import { toast } from './ui/use-toast';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './ui/accordion';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from './ui/collapsible';
 import { Separator } from './ui/separator';
+import { ScrollArea } from './ui/scroll-area';
 
 export default function MarkdownEditor() {
   const [markdownContent, setMarkdownContent] = useState(`# Document Content
@@ -347,13 +349,15 @@ For further assistance, please contact customer support at support@insurance.com
           </TabsList>
         </div>
         
-        <TabsContent value="markdown" className="flex-1 p-0 m-0">
-          <Textarea
-            value={markdownContent}
-            onChange={handleContentChange}
-            className="markdown-editor rounded-none border-0"
-            placeholder="Enter markdown content..."
-          />
+        <TabsContent value="markdown" className="flex-1 flex flex-col p-0 m-0 h-full overflow-hidden">
+          <div className="flex-1 h-full overflow-hidden">
+            <Textarea
+              value={markdownContent}
+              onChange={handleContentChange}
+              className="h-full w-full rounded-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+              placeholder="Enter markdown content..."
+            />
+          </div>
         </TabsContent>
         
         <TabsContent value="preview" className="flex-1 p-4 overflow-auto m-0">
@@ -628,4 +632,3 @@ For further assistance, please contact customer support at support@insurance.com
     </div>
   );
 }
-
