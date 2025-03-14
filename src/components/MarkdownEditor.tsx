@@ -8,6 +8,7 @@ import { Textarea } from './ui/textarea';
 import { toast } from './ui/use-toast';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './ui/accordion';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from './ui/collapsible';
+import { Separator } from './ui/separator';
 
 export default function MarkdownEditor() {
   const [markdownContent, setMarkdownContent] = useState(`# Document Content
@@ -415,58 +416,105 @@ For further assistance, please contact customer support at support@insurance.com
           </div>
         </TabsContent>
 
-        <TabsContent value="qa" className="flex-1 p-4 overflow-auto m-0 flex flex-col">
-          <div className="flex-1 space-y-4">
-            <p className="text-sm text-muted-foreground mb-4">
-              Review the AI-generated questions and answers. Edit them as needed and select the ones you want to add to the document.
-            </p>
-            
-            <Accordion type="multiple" className="w-full">
-              {qaItems.map((item, index) => (
-                <AccordionItem key={index} value={`item-${index}`} className="border-b">
-                  <div className="flex items-start gap-2 py-2">
-                    <Button
-                      variant={item.accepted ? "default" : "outline"}
-                      size="sm"
-                      className="mt-4"
-                      onClick={() => acceptQA(index)}
-                    >
-                      {item.accepted ? "Selected" : "Select"}
-                    </Button>
-                    <div className="flex-1">
-                      <AccordionTrigger className="py-2 hover:no-underline">
-                        <span className="text-left font-medium">{item.question}</span>
-                      </AccordionTrigger>
-                      <AccordionContent className="space-y-3">
-                        <div className="space-y-2">
-                          <label className="text-sm font-medium">Question:</label>
-                          <Textarea
-                            value={item.question}
-                            onChange={(e) => updateQuestion(index, e.target.value)}
-                            className="min-h-[60px]"
-                          />
+        {/* Improved Q&A section with better spacing and layout */}
+        <TabsContent value="qa" className="flex-1 p-0 m-0 flex flex-col">
+          <div className="flex-1 overflow-auto">
+            <div className="p-4 bg-background">
+              <div className="mb-4">
+                <h3 className="text-lg font-medium mb-2">AI-Generated Q&A Pairs</h3>
+                <p className="text-sm text-muted-foreground">
+                  Review and select the questions and answers you want to include in your document. You can edit them before saving.
+                </p>
+              </div>
+              
+              <div className="space-y-4">
+                {qaItems.map((item, index) => (
+                  <div 
+                    key={index} 
+                    className={cn(
+                      "border rounded-lg overflow-hidden transition-all duration-200",
+                      item.accepted ? "border-primary bg-primary/5" : "border-border"
+                    )}
+                  >
+                    <div className="p-4">
+                      <div className="flex items-start justify-between gap-4">
+                        <div className="flex-1">
+                          <h4 className="font-medium text-base mb-1">Question {index + 1}</h4>
+                          <p className="text-sm text-foreground">{item.question}</p>
                         </div>
-                        <div className="space-y-2">
-                          <label className="text-sm font-medium">Answer:</label>
-                          <Textarea
-                            value={item.answer}
-                            onChange={(e) => updateAnswer(index, e.target.value)}
-                            className="min-h-[100px]"
-                          />
-                        </div>
-                      </AccordionContent>
+                        <Button
+                          variant={item.accepted ? "default" : "outline"}
+                          size="sm"
+                          onClick={() => acceptQA(index)}
+                          className="whitespace-nowrap"
+                        >
+                          {item.accepted ? "Selected" : "Select"}
+                        </Button>
+                      </div>
+                      
+                      <Separator className="my-3" />
+                      
+                      <div className="mt-3">
+                        <h4 className="font-medium text-sm mb-1 text-muted-foreground">Answer</h4>
+                        <p className="text-sm">{item.answer}</p>
+                      </div>
+                      
+                      <div className="mt-4 pt-2 border-t flex justify-end">
+                        <Button 
+                          variant="ghost" 
+                          size="sm"
+                          onClick={() => {
+                            const accordionElement = document.getElementById(`edit-qa-${index}`);
+                            if (accordionElement) {
+                              accordionElement.setAttribute('data-state', 'open');
+                            }
+                          }}
+                        >
+                          Edit
+                        </Button>
+                      </div>
                     </div>
+                    
+                    <Accordion type="single" collapsible className="w-full">
+                      <AccordionItem value={`item-${index}`} id={`edit-qa-${index}`} className="border-t">
+                        <AccordionTrigger className="px-4 py-2 text-sm font-medium">
+                          Edit Question & Answer
+                        </AccordionTrigger>
+                        <AccordionContent className="p-4 pt-2 space-y-3 bg-muted/20">
+                          <div className="space-y-2">
+                            <label className="text-sm font-medium">Question:</label>
+                            <Textarea
+                              value={item.question}
+                              onChange={(e) => updateQuestion(index, e.target.value)}
+                              className="min-h-[60px] resize-vertical"
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <label className="text-sm font-medium">Answer:</label>
+                            <Textarea
+                              value={item.answer}
+                              onChange={(e) => updateAnswer(index, e.target.value)}
+                              className="min-h-[100px] resize-vertical"
+                            />
+                          </div>
+                        </AccordionContent>
+                      </AccordionItem>
+                    </Accordion>
                   </div>
-                </AccordionItem>
-              ))}
-            </Accordion>
+                ))}
+              </div>
+            </div>
           </div>
           
-          <div className="border-t mt-4 p-3 bg-muted/30 flex justify-end">
+          <div className="border-t p-4 bg-muted/30 flex justify-between items-center">
+            <p className="text-sm text-muted-foreground">
+              {qaItems.filter(item => item.accepted).length} of {qaItems.length} Q&A pairs selected
+            </p>
             <Button 
               onClick={applySelectedQA}
               size="sm"
               className="gap-1.5"
+              disabled={!qaItems.some(item => item.accepted)}
             >
               <Save className="h-4 w-4" />
               Save Selected Q&A
@@ -474,69 +522,76 @@ For further assistance, please contact customer support at support@insurance.com
           </div>
         </TabsContent>
 
+        {/* Improved Summary section with better spacing and layout */}
         <TabsContent value="summary" className="flex-1 p-0 m-0 flex flex-col">
           <div className="flex-1 overflow-auto">
-            <div className="p-4 bg-background">
-              <Collapsible className="w-full space-y-2">
-                <div className="flex items-center justify-between space-x-4 px-4">
-                  <h4 className="text-sm font-medium">Current Document Summary</h4>
-                  <CollapsibleTrigger asChild>
-                    <Button variant="ghost" size="sm">
-                      <Eye className="h-4 w-4" />
-                      <span className="sr-only">Toggle</span>
-                    </Button>
-                  </CollapsibleTrigger>
-                </div>
-                <CollapsibleContent className="p-4 pt-0 border rounded-md">
+            <div className="p-4 space-y-6">
+              {/* Current Document Summary section */}
+              <div className="space-y-2">
+                <h3 className="text-lg font-medium">Current Document Summary</h3>
+                <div className="p-4 border rounded-lg bg-muted/20">
                   {documentSummary ? (
                     <p className="text-sm">{documentSummary}</p>
                   ) : (
                     <p className="text-sm text-muted-foreground italic">No summary has been set for this document.</p>
                   )}
-                </CollapsibleContent>
-              </Collapsible>
-            </div>
-            
-            <div className="p-4 border-t">
-              <h4 className="text-sm font-medium mb-2">AI-Generated Summary</h4>
-              {showSummaryPreview ? (
-                <div className="prose dark:prose-invert max-w-none p-4 border rounded-md">
-                  <p>{aiSummary}</p>
                 </div>
-              ) : (
-                <Textarea
-                  value={aiSummary}
-                  onChange={(e) => setAiSummary(e.target.value)}
-                  className="min-h-[150px]"
-                  placeholder="AI-generated summary will appear here. You can edit it before applying."
-                />
-              )}
+              </div>
+              
+              <Separator />
+              
+              {/* AI-Generated Summary section */}
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-lg font-medium">AI-Generated Summary</h3>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="gap-1.5"
+                    onClick={toggleSummaryPreview}
+                  >
+                    {showSummaryPreview ? (
+                      <>
+                        <EyeOff className="h-4 w-4" />
+                        <span>Edit</span>
+                      </>
+                    ) : (
+                      <>
+                        <Eye className="h-4 w-4" />
+                        <span>Preview</span>
+                      </>
+                    )}
+                  </Button>
+                </div>
+                
+                <div className="relative">
+                  {showSummaryPreview ? (
+                    <div className="p-4 border rounded-lg prose dark:prose-invert prose-sm max-w-none">
+                      <p>{aiSummary}</p>
+                    </div>
+                  ) : (
+                    <Textarea
+                      value={aiSummary}
+                      onChange={(e) => setAiSummary(e.target.value)}
+                      className="min-h-[160px] resize-vertical"
+                      placeholder="AI-generated summary will appear here. You can edit it before applying."
+                    />
+                  )}
+                </div>
+                
+                <div className="text-sm text-muted-foreground">
+                  <p>You can edit the AI-generated summary before applying it to your document.</p>
+                </div>
+              </div>
             </div>
           </div>
           
-          <div className="border-t p-3 bg-muted/30 flex justify-between">
-            <Button
-              variant="outline"
-              size="sm"
-              className="gap-1.5"
-              onClick={toggleSummaryPreview}
-            >
-              {showSummaryPreview ? (
-                <>
-                  <EyeOff className="h-4 w-4" />
-                  <span>Edit</span>
-                </>
-              ) : (
-                <>
-                  <Eye className="h-4 w-4" />
-                  <span>Preview</span>
-                </>
-              )}
-            </Button>
+          <div className="border-t p-4 bg-muted/30 flex justify-end">
             <Button 
               onClick={applySummary}
               size="sm"
               className="gap-1.5"
+              disabled={!aiSummary}
             >
               <Save className="h-4 w-4" />
               Apply Summary
