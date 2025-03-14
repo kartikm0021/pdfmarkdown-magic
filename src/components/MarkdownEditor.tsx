@@ -363,7 +363,7 @@ For further assistance, please contact customer support at support@insurance.com
         <TabsContent value="improved" className="flex-1 p-0 m-0 flex flex-col">
           <div className="flex-1 overflow-auto">
             {showAiPreview ? (
-              <div className="prose dark:prose-invert max-w-none p-4">
+              <div className="prose dark:prose-invert max-w-none p-4 h-full border-0">
                 {/* This would be rendered markdown in a real implementation */}
                 <h1>Health Insurance Coverage Document</h1>
                 <h2>Overview</h2>
@@ -379,11 +379,13 @@ For further assistance, please contact customer support at support@insurance.com
                 <p>For further assistance, please contact customer support at support@insurance.com or call 1-800-555-1234.</p>
               </div>
             ) : (
-              <Textarea
-                value={improvedContent}
-                className="markdown-editor rounded-none border-0"
-                readOnly
-              />
+              <div className="w-full h-full flex">
+                <Textarea
+                  value={improvedContent}
+                  className="markdown-editor rounded-none border-0 w-full h-full resize-none"
+                  readOnly
+                />
+              </div>
             )}
           </div>
           <div className="border-t p-3 bg-muted/30 flex justify-between">
