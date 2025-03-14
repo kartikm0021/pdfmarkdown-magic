@@ -246,8 +246,8 @@ For further assistance, please contact customer support at support@insurance.com
 
   return (
     <div className="flex flex-col h-full border-l">
-      <div className="flex items-center justify-between p-4 border-b bg-background">
-        <h2 className="text-lg font-medium">Extracted Markdown</h2>
+      <div className="flex items-center justify-between px-4 py-3 border-b bg-background">
+        <h2 className="text-base font-medium text-muted-foreground">Document Editor</h2>
         <div className="flex items-center space-x-2">
           <Button 
             variant="outline" 
@@ -267,7 +267,7 @@ For further assistance, please contact customer support at support@insurance.com
             disabled={isImproving}
           >
             <Sparkles className={cn("h-4 w-4", isImproving && "animate-pulse")} />
-            <span>Improve Readability</span>
+            <span>Improve</span>
           </Button>
           <Button 
             variant="secondary"
@@ -277,7 +277,7 @@ For further assistance, please contact customer support at support@insurance.com
             disabled={isGeneratingQA}
           >
             <MessageCircleQuestion className={cn("h-4 w-4", isGeneratingQA && "animate-pulse")} />
-            <span>{qaItems.length ? "View Q&A" : "Generate Q&A"}</span>
+            <span>{qaItems.length ? "View Q&A" : "Q&A"}</span>
           </Button>
           <Button 
             variant="secondary"
@@ -287,7 +287,7 @@ For further assistance, please contact customer support at support@insurance.com
             disabled={isGeneratingSummary}
           >
             <ListChecks className={cn("h-4 w-4", isGeneratingSummary && "animate-pulse")} />
-            <span>{aiSummary || documentSummary ? "View Summary" : "Generate Summary"}</span>
+            <span>{aiSummary || documentSummary ? "Summary" : "Summarize"}</span>
           </Button>
           <Button 
             size="sm" 
@@ -296,7 +296,7 @@ For further assistance, please contact customer support at support@insurance.com
             disabled={isSaving || !hasUnsavedChanges}
           >
             <Save className="h-4 w-4" />
-            <span>Save Changes</span>
+            <span>Save</span>
           </Button>
         </div>
       </div>
@@ -312,7 +312,7 @@ For further assistance, please contact customer support at support@insurance.com
               value="markdown" 
               className="rounded-none px-4 py-2 data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-primary"
             >
-              Markdown
+              Edit
             </TabsTrigger>
             <TabsTrigger 
               value="preview" 
@@ -628,3 +628,4 @@ For further assistance, please contact customer support at support@insurance.com
     </div>
   );
 }
+
