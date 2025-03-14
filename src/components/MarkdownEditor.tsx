@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import { RefreshCw, Save, Sparkles } from 'lucide-react';
+import { RefreshCw, Save, Sparkles, Eye, EyeOff } from 'lucide-react';
 import { Button } from './ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { cn } from '@/lib/utils';
@@ -26,6 +26,7 @@ This is the extracted markdown content from the PDF document. You can edit it he
   const [isSaving, setIsSaving] = useState(false);
   const [isRegenerating, setIsRegenerating] = useState(false);
   const [isImproving, setIsImproving] = useState(false);
+  const [showAiPreview, setShowAiPreview] = useState(false);
 
   const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setMarkdownContent(e.target.value);
@@ -97,6 +98,10 @@ For further assistance, please contact customer support at support@insurance.com
       title: "Improvements applied",
       description: "The AI suggestions have been applied to your document.",
     });
+  };
+
+  const toggleAiPreview = () => {
+    setShowAiPreview(!showAiPreview);
   };
 
   const hasUnsavedChanges = markdownContent !== originalContent;
@@ -194,13 +199,49 @@ For further assistance, please contact customer support at support@insurance.com
 
         <TabsContent value="improved" className="flex-1 p-0 m-0 flex flex-col">
           <div className="flex-1 overflow-auto">
-            <Textarea
-              value={improvedContent}
-              className="markdown-editor rounded-none border-0"
-              readOnly
-            />
+            {showAiPreview ? (
+              <div className="prose dark:prose-invert max-w-none p-4">
+                {/* This would be rendered markdown in a real implementation */}
+                <h1>Health Insurance Coverage Document</h1>
+                <h2>Overview</h2>
+                <p>This document outlines the comprehensive coverage details for your health insurance plan. Please review all sections carefully to understand your benefits.</p>
+                <h2>Key Benefits</h2>
+                <ul>
+                  <li><strong>Coverage Details</strong>: Full hospital and outpatient services</li>
+                  <li><strong>Premium Information</strong>: Monthly premium of $250 with family discounts</li>
+                  <li><strong>Eligibility</strong>: Available for all employees and dependents</li>
+                  <li><strong>Claims Process</strong>: Simple online submission with 7-day processing</li>
+                </ul>
+                <h2>Additional Information</h2>
+                <p>For further assistance, please contact customer support at support@insurance.com or call 1-800-555-1234.</p>
+              </div>
+            ) : (
+              <Textarea
+                value={improvedContent}
+                className="markdown-editor rounded-none border-0"
+                readOnly
+              />
+            )}
           </div>
-          <div className="border-t p-3 bg-muted/30 flex justify-end">
+          <div className="border-t p-3 bg-muted/30 flex justify-between">
+            <Button
+              variant="outline"
+              size="sm"
+              className="gap-1.5"
+              onClick={toggleAiPreview}
+            >
+              {showAiPreview ? (
+                <>
+                  <EyeOff className="h-4 w-4" />
+                  <span>Show Markdown</span>
+                </>
+              ) : (
+                <>
+                  <Eye className="h-4 w-4" />
+                  <span>Preview</span>
+                </>
+              )}
+            </Button>
             <Button 
               onClick={applyImprovedVersion}
               size="sm"
