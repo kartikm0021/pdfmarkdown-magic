@@ -34,16 +34,16 @@ export default function PDFViewer() {
 
   return (
     <div className="flex flex-col h-full">
-      <div className="flex items-center justify-between p-4 border-b bg-background">
-        <div className="text-lg font-medium truncate">Basic Health Contract.pdf</div>
+      <div className="flex items-center p-4 border-b">
+        <div className="text-lg font-medium">Basic Health Contract.pdf</div>
       </div>
       
-      <div className="flex items-center justify-between p-2 bg-secondary/50 border-b">
-        <div className="flex items-center space-x-2">
+      <div className="flex items-center p-2 bg-secondary/10 border-b">
+        <div className="flex items-center space-x-1">
           <Button 
             variant="outline" 
             size="icon" 
-            className="pdf-page-btn" 
+            className="h-8 w-8" 
             onClick={goToPreviousPage}
             disabled={currentPage <= 1}
           >
@@ -66,7 +66,7 @@ export default function PDFViewer() {
           <Button 
             variant="outline" 
             size="icon" 
-            className="pdf-page-btn" 
+            className="h-8 w-8" 
             onClick={goToNextPage}
             disabled={currentPage >= totalPages}
           >

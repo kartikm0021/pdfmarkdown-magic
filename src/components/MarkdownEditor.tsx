@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { RefreshCw, Save, Sparkles, Eye, EyeOff, MessageCircleQuestion, ListChecks } from 'lucide-react';
 import { Button } from './ui/button';
@@ -349,12 +350,14 @@ For further assistance, please contact customer support at support@insurance.com
         </div>
         
         <TabsContent value="markdown" className="flex-1 p-0 m-0 overflow-hidden">
-          <Textarea
-            value={markdownContent}
-            onChange={handleContentChange}
-            className="h-full w-full rounded-none border-0 resize-none focus-visible:ring-0 focus-visible:ring-offset-0 font-mono py-4 px-4"
-            placeholder="Enter markdown content..."
-          />
+          <div className="h-full w-full overflow-auto">
+            <Textarea
+              value={markdownContent}
+              onChange={handleContentChange}
+              className="h-full w-full rounded-none border-0 resize-none focus-visible:ring-0 focus-visible:ring-offset-0 font-mono py-4 px-4"
+              placeholder="Enter markdown content..."
+            />
+          </div>
         </TabsContent>
         
         <TabsContent value="preview" className="flex-1 p-4 overflow-auto m-0">
