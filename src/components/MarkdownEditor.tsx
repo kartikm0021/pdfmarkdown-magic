@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { RefreshCw, Save, Sparkles, Eye, EyeOff, MessageCircleQuestion, ListChecks } from 'lucide-react';
 import { Button } from './ui/button';
@@ -247,9 +246,9 @@ For further assistance, please contact customer support at support@insurance.com
   const hasUnsavedChanges = markdownContent !== originalContent;
 
   return (
-    <div className="flex flex-col h-full border-l">
-      <div className="flex items-center justify-between px-4 py-3 border-b bg-background">
-        <h2 className="text-base font-medium text-muted-foreground">Document Editor</h2>
+    <div className="flex flex-col h-full">
+      <div className="flex items-center justify-between px-4 py-2 border-b">
+        <h2 className="text-base font-medium">Document Editor</h2>
         <div className="flex items-center space-x-2">
           <Button 
             variant="outline" 
@@ -262,7 +261,7 @@ For further assistance, please contact customer support at support@insurance.com
             <span>Regenerate</span>
           </Button>
           <Button 
-            variant="secondary"
+            variant="outline"
             size="sm" 
             className="gap-1.5"
             onClick={handleImproveReadability}
@@ -272,24 +271,24 @@ For further assistance, please contact customer support at support@insurance.com
             <span>Improve</span>
           </Button>
           <Button 
-            variant="secondary"
+            variant="outline"
             size="sm" 
             className="gap-1.5"
             onClick={handleGenerateQA}
             disabled={isGeneratingQA}
           >
             <MessageCircleQuestion className={cn("h-4 w-4", isGeneratingQA && "animate-pulse")} />
-            <span>{qaItems.length ? "View Q&A" : "Q&A"}</span>
+            <span>View Q&A</span>
           </Button>
           <Button 
-            variant="secondary"
+            variant="outline"
             size="sm" 
             className="gap-1.5"
             onClick={handleGenerateSummary}
             disabled={isGeneratingSummary}
           >
             <ListChecks className={cn("h-4 w-4", isGeneratingSummary && "animate-pulse")} />
-            <span>{aiSummary || documentSummary ? "Summary" : "Summarize"}</span>
+            <span>Summary</span>
           </Button>
           <Button 
             size="sm" 
@@ -308,24 +307,24 @@ For further assistance, please contact customer support at support@insurance.com
         onValueChange={setActiveTab}
         className="flex-1 flex flex-col"
       >
-        <div className="border-b px-4">
-          <TabsList className="bg-transparent p-0 h-auto">
+        <div className="border-b">
+          <TabsList className="bg-transparent h-auto px-4">
             <TabsTrigger 
               value="markdown" 
-              className="rounded-none px-4 py-2 data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-primary"
+              className="rounded-none px-4 py-2 data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-primary font-medium"
             >
               Edit
             </TabsTrigger>
             <TabsTrigger 
               value="preview" 
-              className="rounded-none px-4 py-2 data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-primary"
+              className="rounded-none px-4 py-2 data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-primary font-medium"
             >
               Preview
             </TabsTrigger>
             {improvedContent && (
               <TabsTrigger 
                 value="improved" 
-                className="rounded-none px-4 py-2 data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-primary"
+                className="rounded-none px-4 py-2 data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-primary font-medium"
               >
                 AI Suggestions
               </TabsTrigger>
@@ -333,7 +332,7 @@ For further assistance, please contact customer support at support@insurance.com
             {qaItems.length > 0 && (
               <TabsTrigger 
                 value="qa" 
-                className="rounded-none px-4 py-2 data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-primary"
+                className="rounded-none px-4 py-2 data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-primary font-medium"
               >
                 Q&A Pairs
               </TabsTrigger>
@@ -341,7 +340,7 @@ For further assistance, please contact customer support at support@insurance.com
             {(documentSummary || aiSummary) && (
               <TabsTrigger 
                 value="summary" 
-                className="rounded-none px-4 py-2 data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-primary"
+                className="rounded-none px-4 py-2 data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-primary font-medium"
               >
                 Summary
               </TabsTrigger>
@@ -349,15 +348,13 @@ For further assistance, please contact customer support at support@insurance.com
           </TabsList>
         </div>
         
-        <TabsContent value="markdown" className="flex-1 flex flex-col p-0 m-0 h-full overflow-hidden">
-          <div className="flex-1 h-full overflow-hidden">
-            <Textarea
-              value={markdownContent}
-              onChange={handleContentChange}
-              className="h-full w-full rounded-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0"
-              placeholder="Enter markdown content..."
-            />
-          </div>
+        <TabsContent value="markdown" className="flex-1 p-0 m-0 overflow-hidden">
+          <Textarea
+            value={markdownContent}
+            onChange={handleContentChange}
+            className="h-full w-full rounded-none border-0 resize-none focus-visible:ring-0 focus-visible:ring-offset-0 font-mono py-4 px-4"
+            placeholder="Enter markdown content..."
+          />
         </TabsContent>
         
         <TabsContent value="preview" className="flex-1 p-4 overflow-auto m-0">
